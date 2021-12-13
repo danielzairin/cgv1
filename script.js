@@ -4,6 +4,18 @@ let positions = [];
 let colors = [];
 let numTimesToSubdivide = 3;
 
+let thetaLoc;
+const theta = {
+  x: 0,
+  y: 0,
+  z: 0,
+};
+const thetaChange = {
+  x: 1.0,
+  y: 1.0,
+  z: 1.0,
+};
+
 function init() {
   positions = [];
   colors = [];
@@ -38,7 +50,7 @@ function init() {
 
   // Configure WebGL
   gl.viewport(0, 0, canvas.width, canvas.height);
-  gl.clearColor(1.0, 1.0, 1.0, 1.0);
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
   // Enable hidden-surface removal
   gl.enable(gl.DEPTH_TEST);
@@ -64,6 +76,8 @@ function init() {
   var positionLoc = gl.getAttribLocation(program, "aPosition");
   gl.vertexAttribPointer(positionLoc, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(positionLoc);
+
+  thetaLoc = gl.getUniformLocation(program, "uTheta");
 
   render();
 }
@@ -119,9 +133,45 @@ function divideTetra(a, b, c, d, count) {
   }
 }
 
+function rotateAnimation() {
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  gl.uniform3fv(thetaLoc, Object.values(theta));
+  // theta.x += 1.0;
+  // theta.y += thetaChange.y;
+  theta.z += thetaChange.z;
+
+  if (theta.z > 180 || theta.z < -180) {
+    thetaChange.z *= -1;
+  }
+
+  gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+
+  if (theta.z < -180) return;
+
+  requestAnimationFrame(rotateAnimation);
+}
+
+async function rotate(degrees, rate, axis) {
+  if (degrees <= 0) {
+    return;
+  }
+
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  theta[axis] += rate;
+  gl.uniform3fv(thetaLoc, Object.values(theta));
+  gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+
+  requestAnimationFrame(() =>
+    rotate(degrees - Math.abs(rate), rate, axis, done)
+  );
+}
+
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+
+  rotateAnimation();
 }
 
 init();
