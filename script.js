@@ -16,6 +16,13 @@ const thetaChange = {
   z: 1.0,
 };
 
+let scaleLoc;
+const currScale = {
+  x: 1.0,
+  y: 1.0,
+  z: 1.0,
+};
+
 function init() {
   positions = [];
   colors = [];
@@ -78,6 +85,7 @@ function init() {
   gl.enableVertexAttribArray(positionLoc);
 
   thetaLoc = gl.getUniformLocation(program, "uTheta");
+  scaleLoc = gl.getUniformLocation(program, "uScale");
 
   render();
 }
@@ -167,11 +175,24 @@ async function rotate(degrees, rate, axis) {
   );
 }
 
+function growAnimation() {
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  currScale.x += 0.001;
+  currScale.y += 0.001;
+  currScale.z += 0.001;
+
+  gl.uniform3fv(scaleLoc, Object.values(currScale));
+  gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+
+  requestAnimationFrame(growAnimation);
+}
+
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
 
-  rotateAnimation();
+  growAnimation();
 }
 
 init();
