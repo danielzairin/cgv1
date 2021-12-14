@@ -13,6 +13,7 @@
 
       uniform vec3 uTheta;
       uniform vec3 uScale;
+      uniform vec3 uDisplacement;
 
       void main()
       {
@@ -42,7 +43,7 @@
           uScale.x, 0.0, 0.0, 0.0,
           0.0, uScale.y, 0.0, 0.0,
           0.0, 0.0, uScale.z, 0.0,
-          0.0, 0.0, 0.0, 1.0
+          uDisplacement.x, uDisplacement.y, uDisplacement.z, 1.0
         );
 
         gl_Position = scale * rx * ry * rz * vec4(aPosition, 1.0);

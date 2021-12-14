@@ -23,6 +23,13 @@ const currScale = {
   z: 1.0,
 };
 
+let displacementLoc;
+const displacement = {
+  x: 0.0,
+  y: 0.0,
+  z: 0.0,
+};
+
 function init() {
   positions = [];
   colors = [];
@@ -86,6 +93,7 @@ function init() {
 
   thetaLoc = gl.getUniformLocation(program, "uTheta");
   scaleLoc = gl.getUniformLocation(program, "uScale");
+  displacementLoc = gl.getUniformLocation(program, "uDisplacement");
 
   render();
 }
@@ -188,10 +196,16 @@ function growAnimation() {
   requestAnimationFrame(growAnimation);
 }
 
+function move(amount, axis) {
+  displacement[axis] += amount;
+  gl.uniform3fv(displacementLoc, Object.values(displacement));
+}
+
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
 
+  move(0.5, "x");
   growAnimation();
 }
 
