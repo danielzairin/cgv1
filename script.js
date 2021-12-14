@@ -1,19 +1,17 @@
 import ANIMATION_FRAMES from "./modules/animationFrames.js";
 import makeSubdivTetra from "./modules/makeSubdivTetra.js";
 
-let canvas;
-let gl;
-let positions = [];
-let colors = [];
-let numTimesToSubdivide = 1;
+const canvas = document.getElementById("gl-canvas");
+const gl = canvas.getContext("webgl2");
+
+const positions = [];
+const colors = [];
+const numTimesToSubdivide = 1;
 
 let tMatrix = mat4();
 let tMatrixLoc;
 
 function init() {
-  canvas = document.getElementById("gl-canvas");
-  gl = canvas.getContext("webgl2");
-
   if (!gl) {
     alert("WebGL 2.0 isn't available");
     return;
@@ -21,10 +19,8 @@ function init() {
 
   //  Initialize our data for the Sierpinski Gasket
 
-  // First, initialize the vertices of our 3D gasket
-  // Four vertices on unit circle
   // Intial tetrahedron with equal length sides
-  var vertices = [
+  const vertices = [
     vec3(0.0, 0.0, -1.0),
     vec3(0.0, 0.9428, 0.3333),
     vec3(-0.8165, -0.4714, 0.3333),
@@ -52,24 +48,24 @@ function init() {
   gl.enable(gl.DEPTH_TEST);
 
   // Load shaders and initialize attribute buffers
-  var program = initShaders(gl, "vertex-shader", "fragment-shader");
+  const program = initShaders(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(program);
 
   // Create a buffer object, initialize it, and associate it with the
   // associated attribute variable in our vertex shader
-  var cBuffer = gl.createBuffer();
+  const cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
 
-  var colorLoc = gl.getAttribLocation(program, "aColor");
+  const colorLoc = gl.getAttribLocation(program, "aColor");
   gl.vertexAttribPointer(colorLoc, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(colorLoc);
 
-  var vBuffer = gl.createBuffer();
+  const vBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(positions), gl.STATIC_DRAW);
 
-  var positionLoc = gl.getAttribLocation(program, "aPosition");
+  const positionLoc = gl.getAttribLocation(program, "aPosition");
   gl.vertexAttribPointer(positionLoc, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(positionLoc);
 
