@@ -1,4 +1,5 @@
 import ANIMATION_FRAMES from "./modules/animationFrames.js";
+import makeTetra from "./modules/makeTetra.js";
 
 let canvas;
 let gl;
@@ -73,36 +74,12 @@ function init() {
   render();
 }
 
-function renderTriangle(a, b, c, color) {
-  // Add colors and vertices for one triangle
-  var baseColors = [
-    vec3(1.0, 0.0, 0.0),
-    vec3(0.0, 1.0, 0.0),
-    vec3(0.0, 0.0, 1.0),
-    vec3(0.0, 0.0, 0.0),
-  ];
-
-  colors.push(baseColors[color]);
-  positions.push(a);
-  colors.push(baseColors[color]);
-  positions.push(b);
-  colors.push(baseColors[color]);
-  positions.push(c);
-}
-
-function renderTetra(a, b, c, d) {
-  // Tetrahedron with each side using
-  // a different color
-  renderTriangle(a, c, b, 0);
-  renderTriangle(a, c, d, 1);
-  renderTriangle(a, b, d, 2);
-  renderTriangle(b, c, d, 3);
-}
-
 function divideTetra(a, b, c, d, count) {
   // Check for end of recursion
   if (count === 0) {
-    renderTetra(a, b, c, d);
+    const tetra = makeTetra(a, b, c, d);
+    positions.push(...tetra.positions);
+    colors.push(...tetra.colors);
   }
 
   // Find midpoints of sides
