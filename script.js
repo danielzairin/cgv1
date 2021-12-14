@@ -1,3 +1,5 @@
+import ANIMATION_FRAMES from "./modules/animationFrames.js";
+
 let canvas;
 let gl;
 let positions = [];
@@ -6,15 +8,6 @@ let numTimesToSubdivide = 0;
 
 let tMatrix = mat4();
 let tMatrixLoc;
-
-const ANIMATION_FRAMES = [];
-for (let i = 0; i < 60; i++) ANIMATION_FRAMES.push(scale(0.995, 0.995, 0.995));
-for (let i = 0; i < 90; i++) ANIMATION_FRAMES.push(rotateY(-1));
-for (let i = 0; i < 90; i++) ANIMATION_FRAMES.push(rotateY(1));
-for (let i = 0; i < 90; i++) ANIMATION_FRAMES.push(rotateY(1));
-for (let i = 0; i < 90; i++) ANIMATION_FRAMES.push(rotateY(-1));
-for (let i = 0; i < 60; i++) ANIMATION_FRAMES.push(scale(1.005, 1.005, 1.005));
-for (let i = 0; i < 60; i++) ANIMATION_FRAMES.push(translate(0, -0.05, 0));
 
 function init() {
   canvas = document.getElementById("gl-canvas");
