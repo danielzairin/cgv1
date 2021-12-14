@@ -1,11 +1,11 @@
 import ANIMATION_FRAMES from "./modules/animationFrames.js";
-import makeTetra from "./modules/makeTetra.js";
+import makeSubdivTetra from "./modules/makeSubdivTetra.js";
 
 let canvas;
 let gl;
 let positions = [];
 let colors = [];
-let numTimesToSubdivide = 0;
+let numTimesToSubdivide = 1;
 
 let tMatrix = mat4();
 let tMatrixLoc;
@@ -31,13 +31,18 @@ function init() {
     vec3(0.8165, -0.4714, 0.3333),
   ];
 
-  divideTetra(
+  const tetras = makeSubdivTetra(
     vertices[0],
     vertices[1],
     vertices[2],
     vertices[3],
     numTimesToSubdivide
   );
+
+  tetras.forEach((tetra) => {
+    positions.push(...tetra.positions);
+    colors.push(...tetra.colors);
+  });
 
   // Configure WebGL
   gl.viewport(0, 0, canvas.width, canvas.height);
@@ -72,33 +77,6 @@ function init() {
   gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));
 
   render();
-}
-
-function divideTetra(a, b, c, d, count) {
-  // Check for end of recursion
-  if (count === 0) {
-    const tetra = makeTetra(a, b, c, d);
-    positions.push(...tetra.positions);
-    colors.push(...tetra.colors);
-  }
-
-  // Find midpoints of sides
-  // divide four smaller tetrahedra
-  else {
-    var ab = mix(a, b, 0.5);
-    var ac = mix(a, c, 0.5);
-    var ad = mix(a, d, 0.5);
-    var bc = mix(b, c, 0.5);
-    var bd = mix(b, d, 0.5);
-    var cd = mix(c, d, 0.5);
-
-    --count;
-
-    divideTetra(a, ab, ac, ad, count);
-    divideTetra(ab, b, bc, bd, count);
-    divideTetra(ac, bc, c, cd, count);
-    divideTetra(ad, bd, cd, d, count);
-  }
 }
 
 function render() {
