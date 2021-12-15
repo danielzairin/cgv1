@@ -25,14 +25,13 @@ function init() {
     return;
   }
 
-  //  Initialize our data for the Sierpinski Gasket
-
+  // Initialize our data for the Sierpinski Gasket
   // Intial tetrahedron with equal length sides
   const vertices = [
-    vec3(0.0, 0.0, -1.0),
-    vec3(0.0, 0.9428, 0.3333),
-    vec3(-0.8165, -0.4714, 0.3333),
-    vec3(0.8165, -0.4714, 0.3333),
+    vec3(0.0, 0.0, -0.5),
+    vec3(0.0, 0.4714, 0.1666),
+    vec3(-0.4083, -0.2357, 0.1666),
+    vec3(0.4083, -0.2357, 0.1666),
   ];
 
   const tetras = makeSubdivTetra(
