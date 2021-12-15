@@ -1,14 +1,20 @@
 import { createIntro, createFreeMove } from "./modules/transformations.js";
 import makeSubdivTetra from "./modules/makeSubdivTetra.js";
+import parseHexcode from "./utils/parseHexcode.js";
 
 const canvas = document.querySelector("#gl-canvas");
 const gl = canvas.getContext("webgl2");
 const button = document.querySelector("#button");
 const inputs = {
   subdiv: document.querySelector("#input-subdiv"),
+  color: [
+    document.querySelector("#input-color1"),
+    document.querySelector("#input-color2"),
+    document.querySelector("#input-color3"),
+    document.querySelector("#input-color4"),
+  ],
 };
 
-let numTimesToSubdivide = Number.parseInt(inputs.subdiv.value);
 let positions = [];
 let colors = [];
 let lastFrame = null;
@@ -42,7 +48,8 @@ function init() {
     vertices[1],
     vertices[2],
     vertices[3],
-    numTimesToSubdivide
+    inputs.color.map(({ value }) => parseHexcode(value)),
+    Number.parseInt(inputs.subdiv.value)
   );
 
   tetras.forEach((tetra) => {
@@ -98,8 +105,5 @@ function render() {
 }
 
 button.addEventListener("click", init);
-inputs.subdiv.addEventListener("change", (e) => {
-  numTimesToSubdivide = Number.parseInt(e.target.value);
-});
 
 init();
