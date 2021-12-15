@@ -1,4 +1,4 @@
-import { createIntro } from "./modules/transformations.js";
+import { createIntro, createFreeMove } from "./modules/transformations.js";
 import makeSubdivTetra from "./modules/makeSubdivTetra.js";
 
 const canvas = document.querySelector("#gl-canvas");
@@ -87,7 +87,7 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
 
-  if (!matrices.length) matrices = createIntro();
+  if (!matrices.length) matrices = createFreeMove();
 
   tMatrix = mult(tMatrix, matrices.shift());
   gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));
