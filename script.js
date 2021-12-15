@@ -4,8 +4,11 @@ import makeSubdivTetra from "./modules/makeSubdivTetra.js";
 const canvas = document.querySelector("#gl-canvas");
 const gl = canvas.getContext("webgl2");
 const button = document.querySelector("#button");
+const inputs = {
+  subdiv: document.querySelector("#input-subdiv"),
+};
 
-let numTimesToSubdivide = 0;
+let numTimesToSubdivide = Number.parseInt(inputs.subdiv.value);
 let positions = [];
 let colors = [];
 let lastFrame = null;
@@ -95,5 +98,8 @@ function render() {
 }
 
 button.addEventListener("click", init);
+inputs.subdiv.addEventListener("change", (e) => {
+  numTimesToSubdivide = Number.parseInt(e.target.value);
+});
 
 init();

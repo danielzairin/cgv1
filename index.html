@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>Assignment 1: Introduction to Graphics and WebGL</title>
+    <link rel="stylesheet" href="style.css" />
 
     <script id="vertex-shader" type="x-shader/x-vertex">
       #version 300 es
@@ -49,6 +50,17 @@
       <canvas id="gl-canvas" width="512" height="512">
         Oops ... your browser doesn't support the HTML5 canvas element
       </canvas>
+    </div>
+    <div class="input-container">
+      <label for="input-subdiv">Subdivisions:</label>
+      <input id="input-subdiv" type="range" min="0" max="5" value="1" />
+    </div>
+    <div class="input-container">
+      <label for="input-color1">Colors:</label>
+      <input id="input-color1" type="color" />
+      <input id="input-color2" type="color" />
+      <input id="input-color3" type="color" />
+      <input id="input-color4" type="color" />
     </div>
     <button id="button">Restart animation</button>
   </body>

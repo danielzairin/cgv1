@@ -1,0 +1,6 @@
+.input-container {
+  display: flex;
+  align-items: center;
+  grid-gap: 1em;
+  margin: 1em 0;
+}
