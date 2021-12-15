@@ -13,20 +13,21 @@ const inputs = {
     document.querySelector("#input-color3"),
     document.querySelector("#input-color4"),
   ],
+  rotationSpeed: document.querySelector("#input-rotationSpeed"),
 };
 
-let positions = [];
-let colors = [];
-let lastFrame = null;
-let matrices = createIntro();
-let tMatrix = mat4();
+let positions;
+let colors;
+let lastFrame;
+let matrices;
+let tMatrix;
 let tMatrixLoc;
 
 function init() {
   cancelAnimationFrame(lastFrame);
   positions = [];
   colors = [];
-  matrices = createIntro();
+  matrices = createIntro(Number.parseInt(inputs.rotationSpeed.value));
   tMatrix = mat4();
 
   if (!gl) {
