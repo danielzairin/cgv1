@@ -1,17 +1,25 @@
-import ANIMATION_FRAMES from "./modules/animationFrames.js";
+import { createIntro } from "./modules/transformations.js";
 import makeSubdivTetra from "./modules/makeSubdivTetra.js";
 
-const canvas = document.getElementById("gl-canvas");
+const canvas = document.querySelector("#gl-canvas");
 const gl = canvas.getContext("webgl2");
+const button = document.querySelector("#button");
 
-const positions = [];
-const colors = [];
-const numTimesToSubdivide = 1;
-
+let numTimesToSubdivide = 0;
+let positions = [];
+let colors = [];
+let lastFrame = null;
+let matrices = createIntro();
 let tMatrix = mat4();
 let tMatrixLoc;
 
 function init() {
+  cancelAnimationFrame(lastFrame);
+  positions = [];
+  colors = [];
+  matrices = createIntro();
+  tMatrix = mat4();
+
   if (!gl) {
     alert("WebGL 2.0 isn't available");
     return;
@@ -77,15 +85,16 @@ function init() {
 
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
 
-  if (ANIMATION_FRAMES.length)
-    tMatrix = mult(tMatrix, ANIMATION_FRAMES.shift());
+  if (!matrices.length) matrices = createIntro();
 
+  tMatrix = mult(tMatrix, matrices.shift());
   gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));
 
-  requestAnimationFrame(render);
+  lastFrame = requestAnimationFrame(render);
 }
+
+button.addEventListener("click", init);
 
 init();
