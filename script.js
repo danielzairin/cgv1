@@ -1,4 +1,4 @@
-import { createIntro, createFreeMove } from "./modules/transformations.js";
+import { createIntro, createFigure8 } from "./modules/transformations.js";
 import makeSubdivTetra from "./modules/makeSubdivTetra.js";
 import parseHexcode from "./utils/parseHexcode.js";
 
@@ -103,10 +103,7 @@ function render() {
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
 
   if (!matrices.length)
-    matrices = createFreeMove(
-      undefined,
-      Number.parseFloat(inputs.moveSpeed.value)
-    );
+    matrices = createFigure8(Number.parseFloat(inputs.moveSpeed.value));
 
   tMatrix = mult(tMatrix, matrices.shift());
   gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));

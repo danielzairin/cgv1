@@ -50,3 +50,45 @@ export function createFreeMove(
 
   return matrices;
 }
+
+export function createFigure8(moveSpeed = 0.01) {
+  const matrices = [];
+  const d = 0.3;
+  let x = 0;
+  let y = 0;
+
+  while (x !== -d && y !== -d) {
+    const t = translate(-moveSpeed, -moveSpeed, 0);
+    x = Math.max(x - moveSpeed, -d);
+    y = Math.max(y - moveSpeed, -d);
+    matrices.push(t);
+  }
+
+  while (x !== d) {
+    const t = translate(moveSpeed, 0, 0);
+    x = Math.min(x + moveSpeed, d);
+    matrices.push(t);
+  }
+
+  while (x !== -d && y !== d) {
+    const t = translate(-moveSpeed, moveSpeed, 0);
+    x = Math.max(x - moveSpeed, -d);
+    y = Math.min(y + moveSpeed, d);
+    matrices.push(t);
+  }
+
+  while (x !== d) {
+    const t = translate(moveSpeed, 0, 0);
+    x = Math.min(x + moveSpeed, d);
+    matrices.push(t);
+  }
+
+  while (x !== 0 && y !== 0) {
+    const t = translate(-moveSpeed, -moveSpeed, 0);
+    x = Math.max(x - moveSpeed, 0);
+    y = Math.max(y - moveSpeed, 0);
+    matrices.push(t);
+  }
+
+  return matrices;
+}
