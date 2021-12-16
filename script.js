@@ -26,27 +26,17 @@ function init() {
   }
 
   // Initialize our data for the Sierpinski Gasket
-  // Intial tetrahedron with equal length sides
-  const vertices = [
+  const subdivTetra = makeSubdivTetra(
     vec3(0.0, 0.0, -0.5),
     vec3(0.0, 0.4714, 0.1666),
     vec3(-0.4083, -0.2357, 0.1666),
     vec3(0.4083, -0.2357, 0.1666),
-  ];
-
-  const tetras = makeSubdivTetra(
-    vertices[0],
-    vertices[1],
-    vertices[2],
-    vertices[3],
     [input.color1, input.color2, input.color3, input.color4],
     input.subdiv
   );
 
-  tetras.forEach((tetra) => {
-    positions.push(...tetra.positions);
-    colors.push(...tetra.colors);
-  });
+  positions = subdivTetra.positions;
+  colors = subdivTetra.colors;
 
   // Configure WebGL
   gl.viewport(0, 0, canvas.width, canvas.height);

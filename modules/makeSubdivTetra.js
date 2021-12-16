@@ -2,7 +2,12 @@ import makeTetra from "./makeTetra.js";
 
 export default function makeSubdivTetra(a, b, c, d, colors, count) {
   // Check for end of recursion
-  if (count === 0) return [makeTetra(a, b, c, d, colors)];
+  const positions = [];
+  const _colors = [];
+
+  if (count === 0) {
+    return makeTetra(a, b, c, d, colors);
+  }
 
   // Find midpoints of sides divide four smaller tetrahedra
   var ab = mix(a, b, 0.5);
@@ -14,10 +19,17 @@ export default function makeSubdivTetra(a, b, c, d, colors, count) {
 
   --count;
 
-  return [
-    ...makeSubdivTetra(a, ab, ac, ad, colors, count),
-    ...makeSubdivTetra(ab, b, bc, bd, colors, count),
-    ...makeSubdivTetra(ac, bc, c, cd, colors, count),
-    ...makeSubdivTetra(ad, bd, cd, d, colors, count),
+  const tetras = [
+    makeSubdivTetra(a, ab, ac, ad, colors, count),
+    makeSubdivTetra(ab, b, bc, bd, colors, count),
+    makeSubdivTetra(ac, bc, c, cd, colors, count),
+    makeSubdivTetra(ad, bd, cd, d, colors, count),
   ];
+
+  tetras.forEach((tetra) => {
+    positions.push(...tetra.positions);
+    _colors.push(...tetra.colors);
+  });
+
+  return { positions, colors: _colors };
 }
