@@ -1,22 +1,10 @@
 import { createIntro, createFigure8 } from "./modules/transformations.js";
 import makeSubdivTetra from "./modules/makeSubdivTetra.js";
-import parseHexcode from "./utils/parseHexcode.js";
+import input from "./modules/inputs.js";
 
 const canvas = document.querySelector("#gl-canvas");
 const gl = canvas.getContext("webgl2");
 const button = document.querySelector("#button");
-const inputs = {
-  subdiv: document.querySelector("#input-subdiv"),
-  color: [
-    document.querySelector("#input-color1"),
-    document.querySelector("#input-color2"),
-    document.querySelector("#input-color3"),
-    document.querySelector("#input-color4"),
-  ],
-  rotationSpeed: document.querySelector("#input-rotationSpeed"),
-  enlargementSpeed: document.querySelector("#input-enlargementSpeed"),
-  moveSpeed: document.querySelector("#input-moveSpeed"),
-};
 
 let positions;
 let colors;
@@ -29,10 +17,7 @@ function init() {
   cancelAnimationFrame(lastFrame);
   positions = [];
   colors = [];
-  matrices = createIntro(
-    Number.parseInt(inputs.rotationSpeed.value),
-    Number.parseFloat(inputs.enlargementSpeed.value)
-  );
+  matrices = createIntro(input.rotationSpeed, input.enlargementSpeed);
   tMatrix = mat4();
 
   if (!gl) {
@@ -54,8 +39,8 @@ function init() {
     vertices[1],
     vertices[2],
     vertices[3],
-    inputs.color.map(({ value }) => parseHexcode(value)),
-    Number.parseInt(inputs.subdiv.value)
+    [input.color1, input.color2, input.color3, input.color4],
+    input.subdiv
   );
 
   tetras.forEach((tetra) => {
@@ -102,8 +87,7 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
 
-  if (!matrices.length)
-    matrices = createFigure8(Number.parseFloat(inputs.moveSpeed.value));
+  if (!matrices.length) matrices = createFigure8(input.moveSpeed);
 
   tMatrix = mult(tMatrix, matrices.shift());
   gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));
