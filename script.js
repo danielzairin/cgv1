@@ -15,6 +15,7 @@ const inputs = {
   ],
   rotationSpeed: document.querySelector("#input-rotationSpeed"),
   enlargementSpeed: document.querySelector("#input-enlargementSpeed"),
+  moveSpeed: document.querySelector("#input-moveSpeed"),
 };
 
 let positions;
@@ -101,7 +102,11 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawArrays(gl.TRIANGLES, 0, positions.length);
 
-  if (!matrices.length) matrices = createFreeMove();
+  if (!matrices.length)
+    matrices = createFreeMove(
+      undefined,
+      Number.parseFloat(inputs.moveSpeed.value)
+    );
 
   tMatrix = mult(tMatrix, matrices.shift());
   gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));
