@@ -6,85 +6,81 @@ const canvas = document.querySelector("#gl-canvas");
 const gl = canvas.getContext("webgl2");
 const button = document.querySelector("#button");
 
-let positions;
-let colors;
-let lastFrame;
-let matrices;
-let tMatrix;
-let tMatrixLoc;
+let matrices, instanceMatrix, vertices, colors, lastFrame;
 
-function init() {
-  cancelAnimationFrame(lastFrame);
-  positions = [];
-  colors = [];
-  matrices = createIntro(input.rotationSpeed, input.enlargementSpeed);
-  tMatrix = mat4();
+// Configure WebGL
+const program = initShaders(gl, "vertex-shader", "fragment-shader");
+gl.viewport(0, 0, canvas.width, canvas.height);
+gl.clearColor(0, 0, 0, 1);
+gl.enable(gl.DEPTH_TEST);
+gl.useProgram(program);
 
-  if (!gl) {
-    alert("WebGL 2.0 isn't available");
-    return;
-  }
+const BUFFER = {
+  COLOR: gl.createBuffer(),
+  VERTICES: gl.createBuffer(),
+};
 
-  // Initialize our data for the Sierpinski Gasket
-  const subdivTetra = makeSubdivTetra(
+const ATTRIBUTE = {
+  COLOR: gl.getAttribLocation(program, "color"),
+  VERTICES: gl.getAttribLocation(program, "vertices"),
+  INSTANCE_MATRIX: gl.getUniformLocation(program, "instanceMatrix"),
+};
+
+function loadObject() {
+  ({ positions: vertices, colors } = makeSubdivTetra(
     vec3(0.0, 0.0, -0.5),
     vec3(0.0, 0.4714, 0.1666),
     vec3(-0.4083, -0.2357, 0.1666),
     vec3(0.4083, -0.2357, 0.1666),
     [input.color1, input.color2, input.color3, input.color4],
     input.subdiv
-  );
+  ));
 
-  positions = subdivTetra.positions;
-  colors = subdivTetra.colors;
+  gl.bindBuffer(gl.ARRAY_BUFFER, BUFFER.VERTICES);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+  gl.vertexAttribPointer(ATTRIBUTE.VERTICES, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(ATTRIBUTE.VERTICES);
 
-  // Configure WebGL
-  gl.viewport(0, 0, canvas.width, canvas.height);
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
-  // Enable hidden-surface removal
-  gl.enable(gl.DEPTH_TEST);
-
-  // Load shaders and initialize attribute buffers
-  const program = initShaders(gl, "vertex-shader", "fragment-shader");
-  gl.useProgram(program);
-
-  // Create a buffer object, initialize it, and associate it with the
-  // associated attribute variable in our vertex shader
-  const cBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, BUFFER.COLOR);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
+  gl.vertexAttribPointer(ATTRIBUTE.COLOR, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(ATTRIBUTE.COLOR);
+}
 
-  const colorLoc = gl.getAttribLocation(program, "aColor");
-  gl.vertexAttribPointer(colorLoc, 3, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(colorLoc);
-
-  const vBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(positions), gl.STATIC_DRAW);
-
-  const positionLoc = gl.getAttribLocation(program, "aPosition");
-  gl.vertexAttribPointer(positionLoc, 3, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(positionLoc);
-
-  tMatrixLoc = gl.getUniformLocation(program, "tMatrix");
-  gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));
-
-  render();
+function loadAnimation() {
+  matrices = createIntro(input.rotationSpeed, input.enlargementSpeed);
+  instanceMatrix = mat4();
+  gl.uniformMatrix4fv(
+    ATTRIBUTE.INSTANCE_MATRIX,
+    false,
+    flatten(instanceMatrix)
+  );
 }
 
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+  gl.drawArrays(gl.TRIANGLES, 0, vertices.length);
 
   if (!matrices.length) matrices = createFigure8(input.moveSpeed);
 
-  tMatrix = mult(tMatrix, matrices.shift());
-  gl.uniformMatrix4fv(tMatrixLoc, false, flatten(tMatrix));
+  instanceMatrix = mult(instanceMatrix, matrices.shift());
+  gl.uniformMatrix4fv(
+    ATTRIBUTE.INSTANCE_MATRIX,
+    false,
+    flatten(instanceMatrix)
+  );
 
   lastFrame = requestAnimationFrame(render);
 }
 
-button.addEventListener("click", init);
+button.addEventListener("click", () => {
+  cancelAnimationFrame(lastFrame);
+  matrices = createIntro(input.rotationSpeed, input.enlargementSpeed);
+  instanceMatrix = mat4();
+  loadObject();
+  render();
+});
 
-init();
+loadObject();
+loadAnimation();
+render();

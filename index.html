@@ -8,16 +8,16 @@
     <script id="vertex-shader" type="x-shader/x-vertex">
       #version 300 es
 
-      in vec3 aPosition;
-      in vec3 aColor;
+      in vec3 vertices;
+      in vec3 color;
       out vec4 vColor;
 
-      uniform mat4 tMatrix;
+      uniform mat4 instanceMatrix;
 
       void main()
       {
-        gl_Position = tMatrix * vec4(aPosition, 1.0);
-        vColor = vec4(aColor, 1.0);
+        gl_Position = instanceMatrix * vec4(vertices, 1.0);
+        vColor = vec4(color, 1.0);
       }
     </script>
 
