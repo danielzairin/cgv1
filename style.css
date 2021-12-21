@@ -1,3 +1,14 @@
+* {
+  font-family: sans-serif;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  flex-flow: wrap-reverse;
+  grid-gap: 2em;
+}
+
 .input-container {
   display: flex;
   align-items: center;
