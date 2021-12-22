@@ -81,11 +81,16 @@ function render() {
   lastFrame = requestAnimationFrame(render);
 }
 
-button.addEventListener("click", () => {
+function restartAnimation() {
   cancelAnimationFrame(lastFrame);
   loadAnimation();
   loadObject();
   render();
+}
+
+button.addEventListener("click", restartAnimation);
+document.addEventListener("keydown", (e) => {
+  if (e.code === "KeyR") restartAnimation();
 });
 
 for (const input of document.getElementsByTagName("input")) {
