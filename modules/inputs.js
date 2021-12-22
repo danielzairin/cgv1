@@ -20,7 +20,6 @@ function getValue(input) {
 
 function handleChange({ target }) {
   inputValues[target.id] = getValue(target);
-  console.log(inputValues);
 }
 
 for (const input of document.getElementsByTagName("input")) {

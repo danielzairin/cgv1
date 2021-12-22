@@ -88,6 +88,10 @@ button.addEventListener("click", () => {
   render();
 });
 
+for (const input of document.getElementsByTagName("input")) {
+  input.addEventListener("change", loadObject);
+}
+
 loadObject();
 loadAnimation();
 render();
