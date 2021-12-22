@@ -7,6 +7,7 @@ const gl = canvas.getContext("webgl2");
 const button = document.querySelector("#button");
 
 let transformations, matrix, positions, colors, lastFrame;
+let theta = 0;
 
 // Configure WebGL
 const program = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -24,6 +25,7 @@ const LOCATION = {
   COLOR: gl.getAttribLocation(program, "aColor"),
   POSITION: gl.getAttribLocation(program, "aPosition"),
   MATRIX: gl.getUniformLocation(program, "uMatrix"),
+  EFFECT: gl.getUniformLocation(program, "uEffect"),
 };
 
 function loadObject() {
@@ -61,6 +63,14 @@ function render() {
 
   matrix = mult(matrix, transformations.shift());
   gl.uniformMatrix4fv(LOCATION.MATRIX, false, flatten(matrix));
+
+  const effect = [
+    (Math.sin(theta) + 1.5) / 2,
+    (Math.sin(theta + 1) + 1.5) / 2,
+    (Math.sin(theta + 2) + 1.5) / 2,
+  ];
+  theta += 0.1;
+  gl.uniform3fv(LOCATION.EFFECT, effect);
 
   lastFrame = requestAnimationFrame(render);
 }
