@@ -8,18 +8,21 @@ export function createIntro(
   let size = 1;
 
   while (theta !== -180) {
-    matrices.push(rotate(-rotationSpeed, rotateAxis));
-    theta = Math.max(-180, theta - rotationSpeed);
+    const change = Math.min(theta + 180, rotationSpeed);
+    matrices.push(rotate(-change, rotateAxis));
+    theta -= change;
   }
 
   while (theta !== 180) {
+    const change = Math.min(180 - theta, rotationSpeed);
     matrices.push(rotate(rotationSpeed, rotateAxis));
-    theta = Math.min(180, theta + rotationSpeed);
+    theta += change;
   }
 
   while (theta !== 0) {
-    matrices.push(rotate(-rotationSpeed, rotateAxis));
-    theta = Math.max(0, theta - rotationSpeed);
+    const change = Math.min(theta, rotationSpeed);
+    matrices.push(rotate(-change, rotateAxis));
+    theta -= change;
   }
 
   while (size !== 1.5) {
