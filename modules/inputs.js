@@ -11,6 +11,8 @@ function getValue(input) {
       return Number.parseFloat(value);
     case "color":
       return parseHexcode(value);
+    case "checkbox":
+      return input.checked;
   }
 
   return value;
@@ -18,6 +20,7 @@ function getValue(input) {
 
 function handleChange({ target }) {
   inputValues[target.id] = getValue(target);
+  console.log(inputValues);
 }
 
 for (const input of document.getElementsByTagName("input")) {

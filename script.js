@@ -50,7 +50,11 @@ function loadObject() {
 }
 
 function loadAnimation() {
-  transformations = createIntro(input.rotationSpeed, input.enlargementSpeed);
+  transformations = createIntro(input.rotationSpeed, input.enlargementSpeed, [
+    Number(input.rotateX),
+    Number(input.rotateY),
+    Number(input.rotateZ),
+  ]);
   matrix = mat4();
   gl.uniformMatrix4fv(LOCATION.MATRIX, false, flatten(matrix));
 }
@@ -64,11 +68,13 @@ function render() {
   matrix = mult(matrix, transformations.shift());
   gl.uniformMatrix4fv(LOCATION.MATRIX, false, flatten(matrix));
 
-  const effect = [
-    (Math.sin(theta) + 1.5) / 2,
-    (Math.sin(theta + 1) + 1.5) / 2,
-    (Math.sin(theta + 2) + 1.5) / 2,
-  ];
+  const effect = input.colorEffect
+    ? [
+        (Math.sin(theta) + 1.5) / 2,
+        (Math.sin(theta + 1) + 1.5) / 2,
+        (Math.sin(theta + 2) + 1.5) / 2,
+      ]
+    : [1, 1, 1];
   theta += 0.1;
   gl.uniform3fv(LOCATION.EFFECT, effect);
 
@@ -77,8 +83,7 @@ function render() {
 
 button.addEventListener("click", () => {
   cancelAnimationFrame(lastFrame);
-  transformations = createIntro(input.rotationSpeed, input.enlargementSpeed);
-  matrix = mat4();
+  loadAnimation();
   loadObject();
   render();
 });

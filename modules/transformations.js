@@ -1,20 +1,24 @@
-export function createIntro(rotationSpeed = 2, growthRate = 1.005) {
+export function createIntro(
+  rotationSpeed = 2,
+  growthRate = 1.005,
+  rotateAxis = [0, 0, 1]
+) {
   const matrices = [];
   let theta = 0;
   let size = 1;
 
   while (theta !== -180) {
-    matrices.push(rotateZ(-rotationSpeed));
+    matrices.push(rotate(-rotationSpeed, rotateAxis));
     theta = Math.max(-180, theta - rotationSpeed);
   }
 
   while (theta !== 180) {
-    matrices.push(rotateZ(rotationSpeed));
+    matrices.push(rotate(rotationSpeed, rotateAxis));
     theta = Math.min(180, theta + rotationSpeed);
   }
 
   while (theta !== 0) {
-    matrices.push(rotateZ(-rotationSpeed));
+    matrices.push(rotate(-rotationSpeed, rotateAxis));
     theta = Math.max(0, theta - rotationSpeed);
   }
 
