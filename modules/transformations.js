@@ -15,7 +15,7 @@ export function createIntro(
 
   while (theta !== 180) {
     const change = Math.min(180 - theta, rotationSpeed);
-    matrices.push(rotate(rotationSpeed, rotateAxis));
+    matrices.push(rotate(change, rotateAxis));
     theta += change;
   }
 
