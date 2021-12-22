@@ -1,5 +1,5 @@
 import { createIntro, createFigure8 } from "./modules/transformations.js";
-import makeSubdivTetra from "./modules/makeSubdivTetra.js";
+import { makeSubdivTetra } from "./modules/geometry.js";
 import input from "./modules/inputs.js";
 
 const canvas = document.querySelector("#gl-canvas");

@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>Assignment 1: Introduction to Graphics and WebGL</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles.css" />
 
     <script id="vertex-shader" type="x-shader/x-vertex">
       #version 300 es
@@ -37,15 +37,10 @@
 
     <script type="text/javascript" src="../Common/initShaders.js"></script>
     <script type="text/javascript" src="../Common/MVnew.js"></script>
-
+    <script type="module" src="./modules/geometry.js"></script>
     <script type="module" src="./modules/transformations.js"></script>
-    <script type="module" src="./modules/makeTriangle.js"></script>
-    <script type="module" src="./modules/makeTetra.js"></script>
-    <script type="module" src="./modules/makeSubdivTetra.js"></script>
     <script type="module" src="./modules/inputs.js" defer></script>
-    <script type="module" src="./utils/parseHexcode.js"></script>
-
-    <script type="module" src="./script.js" defer></script>
+    <script type="module" src="./main.js" defer></script>
   </head>
 
   <body>

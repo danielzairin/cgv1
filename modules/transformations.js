@@ -33,31 +33,6 @@ export function createIntro(
   return matrices;
 }
 
-export function createFreeMove(
-  displacement = 0.5,
-  moveSpeed = 0.01,
-  rotationSpeed = 1
-) {
-  const matrices = [];
-  let y = 0;
-
-  while (y <= displacement) {
-    matrices.push(
-      mult(translate(0, moveSpeed, 0), rotate(rotationSpeed, [1, 1, 1]))
-    );
-    y += moveSpeed;
-  }
-
-  while (y >= 0) {
-    matrices.push(
-      mult(translate(0, -moveSpeed, 0), rotate(rotationSpeed, [1, 1, 1]))
-    );
-    y -= moveSpeed;
-  }
-
-  return matrices;
-}
-
 export function createFigure8(moveSpeed = 0.01) {
   const matrices = [];
   const d = 0.3;
